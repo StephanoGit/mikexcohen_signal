@@ -93,8 +93,8 @@ plot_simEEG(EEG)
 % There should be multiple sine waves simultaneously in each channel/trial.
 
 % list of frequencies and corresponding amplitudes
-frex = [ 3 5 16 ]; % in Hz
-amps = [ 3 4 5  ]; % in arbitrary units
+frex = [ 3 5 16 28 ]; % in Hz
+amps = [ 3 4 5 6 ]; % in arbitrary units
 
 
 % loop over channels and trials
@@ -104,7 +104,7 @@ for chani=1:EEG.nbchan
         % create a multicomponent sine wave
         sinewave = zeros(1,EEG.pnts);
         for si=1:length(frex)
-            sinewave = sinewave + amps(si)*sin(2*pi*frex(si)*EEG.times);
+            sinewave = sinewave + amps(si)*sin(2*pi*frex(si)*EEG.times + rand*2*pi);
         end
         
         % data as a sine wave plus noise

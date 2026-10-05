@@ -11,8 +11,9 @@
 load sampleEEGdata
 
 % explore a bit... what are the different fields? What is the size of the data?
-% How many channels/time points/trials?
-% What is the earliest and last time point? 
+% How many channels/time points/trials? 
+%      64/640/99 2.5minutes or recording
+% What is the earliest and last time point?
 % Where is time = 0?
 % What is the sampling rate?
 EEG
@@ -21,11 +22,11 @@ EEG
 
 % compute the ERP of each channel 
 % (remember that the ERP is the time-domain average across all trials at each time point)
-erp = mean(EEG.data(
+erp = mean(EEG.data, 3);
 
 
 % pick a channel and plot ERP
-chan2plot = 'fcz';
+chan2plot = 'o1';
 
 figure(1), clf
 plot(EEG.times,erp( strcmpi({EEG.chanlocs.labels},chan2plot) ,:),'linew',2)
@@ -34,16 +35,17 @@ set(gca,'xlim',[-400 1200])
 
 %% plot topographical maps
 
-time2plot = 300; % in ms
+time2plot = 600; % in ms
 
 % convert time in ms to time in indices
-[~,tidx] = min(abs(EEG.times-
+[~,tidx] = min(abs(EEG.times-time2plot));
 
 % make a topographical map of the ERP at only this time point.
 figure(2), clf
-topoplotIndie(erp,EEG);
+topoplotIndie(erp(:, tidx),EEG.chanlocs);
 title([ 'ERP from ' num2str(time2plot) ' ms' ])
 colorbar
+set(gca, 'clim',[-8,8])
 
 %%
 
@@ -61,7 +63,7 @@ load v1_laminar
 
 % plot ERP from channel 7 in one line of code!
 figure(3), clf
-plot(timevec,
+plot(timevec,mean(csd(7,:,:), 3))
 hold on
 plot(get(gca,'xlim'),[0 0],'k--')
 plot([0 0],get(gca,'ylim'),'k--')
